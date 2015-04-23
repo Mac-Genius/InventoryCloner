@@ -6,27 +6,43 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.ArrayList;
 
 /**
- * Created by Mac on 4/20/2015.
+ * This sets up the enderchest view of a player for the moderator.
+ *
+ * @author John Harrison
  */
 public class EnderChestUpdater implements Runnable {
     private Player fetch;
     private Player push;
 
+    /**
+     * The constructor. Fetches the player to clone from and and clones it to
+     * the moderator's inventory.
+     *
+     * @param fetchIn is the player to clone from
+     * @param pushIn is the player to clone to
+     */
     public EnderChestUpdater(Player fetchIn, Player pushIn) {
         fetch = fetchIn;
         push = pushIn;
     }
 
+    /**
+     * This creates a new inventory and copies the player's inventory into
+     * it so the moderator can view it.
+     */
     @Override
     public void run() {
+
+        // New chest inventory
         Inventory inventory = fetch.getEnderChest();
         ItemStack[] newInventory = new ItemStack[45];
+
+        // Filler for spaces that won't have an item in it
         ItemStack filler = new ItemStack(Material.STAINED_GLASS_PANE, 1, (short) 15);
         ItemMeta fillerData = filler.getItemMeta();
         fillerData.setDisplayName(ChatColor.RED + "");
@@ -39,6 +55,8 @@ public class EnderChestUpdater implements Runnable {
         for (int i = 27; i < 43; i++) {
             playerInventory.setItem(i, filler);
         }
+
+        // Redstone block that allows a moderator to exit the inventory
         ItemStack exit = new ItemStack(Material.REDSTONE_BLOCK);
         ItemMeta exitData = exit.getItemMeta();
         exitData.setDisplayName(ChatColor.RED + "" + ChatColor.BOLD + "Close Inventory");
@@ -48,6 +66,7 @@ public class EnderChestUpdater implements Runnable {
         exit.setItemMeta(exitData);
         playerInventory.setItem(44, exit);
 
+        // A chest that takes the moderator back to the player's original inventory
         ItemStack chest = new ItemStack(Material.CHEST);
         ItemMeta chestData = chest.getItemMeta();
         chestData.setDisplayName(ChatColor.DARK_PURPLE + "" + ChatColor.BOLD + "View " + fetch.getName() + "'s inventory");
@@ -57,6 +76,7 @@ public class EnderChestUpdater implements Runnable {
         chest.setItemMeta(chestData);
         playerInventory.setItem(43, chest);
 
+        // Sets the moderator's inventory to the player's enderchest inventory
         push.openInventory(playerInventory);
     }
 }

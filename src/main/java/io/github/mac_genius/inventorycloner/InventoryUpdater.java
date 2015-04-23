@@ -12,21 +12,38 @@ import org.bukkit.inventory.meta.ItemMeta;
 import java.util.ArrayList;
 
 /**
- * Created by Mac on 4/19/2015.
+ * This copies the player's inventory to a new one so the
+ * moderator can view it
+ *
+ * @author John Harrison
  */
 public class InventoryUpdater implements Runnable {
-
     private Player fetch;
     private Player push;
+
+    /**
+     * The constructor gets the player to clone from and the player
+     * to clone to.
+     *
+     * @param fetchIn is the player to clone from
+     * @param pushIn is the player to clone to
+     */
     public InventoryUpdater(Player fetchIn, Player pushIn) {
         fetch = fetchIn;
         push = pushIn;
     }
 
+    /**
+     * Sets up the inventory for the moderator to view
+     */
     @Override
     public void run() {
+
+        // Creates a new inventory
         PlayerInventory inventory = fetch.getInventory();
         ItemStack[] newInventory = new ItemStack[54];
+
+        // Filler for the slots that will not filled up
         ItemStack filler = new ItemStack(Material.STAINED_GLASS_PANE, 1, (short) 15);
         ItemMeta fillerData = filler.getItemMeta();
         fillerData.setDisplayName(ChatColor.RED + "");
@@ -42,6 +59,8 @@ public class InventoryUpdater implements Runnable {
         for (int i = 49; i < 51; i++) {
             playerInventory.setItem(i, filler);
         }
+
+        // The anvil to let moderators clone a player's inventory
         ItemStack clone = new ItemStack(Material.ANVIL);
         ItemMeta cloneData = clone.getItemMeta();
         cloneData.setDisplayName(ChatColor.GREEN + "" + ChatColor.BOLD + "Clone it!");
@@ -51,6 +70,7 @@ public class InventoryUpdater implements Runnable {
         clone.setItemMeta(cloneData);
         playerInventory.setItem(52, clone);
 
+        // The redstone block to let a moderator close the inventory
         ItemStack exit = new ItemStack(Material.REDSTONE_BLOCK);
         ItemMeta exitData = exit.getItemMeta();
         exitData.setDisplayName(ChatColor.RED + "" + ChatColor.BOLD + "Close Inventory");
@@ -60,6 +80,7 @@ public class InventoryUpdater implements Runnable {
         exit.setItemMeta(exitData);
         playerInventory.setItem(53, exit);
 
+        // The enderchest to allow a moderator to view a player's enderchest inventory
         ItemStack enderchest = new ItemStack(Material.ENDER_CHEST);
         ItemMeta enderchestData = enderchest.getItemMeta();
         enderchestData.setDisplayName(ChatColor.DARK_PURPLE + "" + ChatColor.BOLD + "View " + fetch.getName() + "'s Enderchest inventory");
@@ -69,11 +90,13 @@ public class InventoryUpdater implements Runnable {
         enderchest.setItemMeta(enderchestData);
         playerInventory.setItem(51, enderchest);
 
+        // Get's the armor from the player
         playerInventory.setItem(45, inventory.getHelmet());
         playerInventory.setItem(46, inventory.getChestplate());
         playerInventory.setItem(47, inventory.getLeggings());
         playerInventory.setItem(48, inventory.getBoots());
 
+        // Allows the moderator to view the player's inventory
         push.openInventory(playerInventory);
     }
 }
