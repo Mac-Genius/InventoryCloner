@@ -1,0 +1,40 @@
+name: InventoryCloner
+main: io.github.mac_genius.inventorycloner.InventoryCloner
+version: 1.0
+permissions:
+    ic.*:
+        description: Gives access to all commands for the plugin
+        children:
+            ic.view: true
+            ic.clone: true
+            ic.help: true
+    ic.view:
+        description: Allows a player to view another player's inventory
+        default: op
+    ic.clone:
+         description: Allows a player to clone another player's inventory
+         default: op
+    ic.help:
+         description: Brings up the commands
+         default: op
+commands:
+    ic:
+        description: This is the help command.
+        usage: /ic
+        permission: ic.help
+        permission-message: You do not have permission to do that.
+    ic view:
+            description: This will allow a player to view another player's inventory.
+            usage: /ic view <playre>
+            permission: ic.view
+            permission-message: You do not have permission to do that.
+    ic clone:
+            description: This will allow a player to clone another player's inventory.
+            usage: /ic clone <player>
+            permission: ic.clone
+            permission-message: You do not have permission to do that.
+    ic help:
+            description: This will show the commands.
+            usage: /ic help
+            permission: ic.help
+            permission-message: You do not have permission to do that.
